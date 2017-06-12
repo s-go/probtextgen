@@ -1,0 +1,21 @@
+env
+src/*.egg-info
+*.DS_Store
+.ropeproject
+*.egg-info
+*.pyc
+*.pyo
+.*.swp
+*.sublime-project
+*.sublime-workspace
+*.log
+pylint*
+
+# py.test files
+.coverage
+.cache
+
+# Eclipse project configuration
+.project
+.pydevproject
+.settings
