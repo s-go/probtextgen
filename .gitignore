@@ -19,3 +19,6 @@ pylint*
 .project
 .pydevproject
 .settings
+
+# Project-specific files
+data
