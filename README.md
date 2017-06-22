@@ -3,7 +3,7 @@
 Dependencies
 ------------
 
-* python3
+* python3.6
 * make
 * virtualenv
 

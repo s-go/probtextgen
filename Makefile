@@ -5,7 +5,7 @@ PROJECT_NAME=probtextgen
 SRCDIR=${PROJECT_NAME}
 TESTDIR=test_${PROJECT_NAME}
 
-VIRTUALENV=virtualenv -p python3
+VIRTUALENV=virtualenv -p python3.6
 VIRTUALENV_DIR=${PWD}/env
 PIP=${VIRTUALENV_DIR}/bin/pip
 PIP_INSTALL=${PIP} install
