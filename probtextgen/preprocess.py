@@ -113,6 +113,7 @@ def extract_relevant_text(title, text):
 
 
 def is_relevant(line):
+    # Let's ignore titles within the text (there's a separate title column)
     if line.startswith('Vorhersage für'):
         return False
 
