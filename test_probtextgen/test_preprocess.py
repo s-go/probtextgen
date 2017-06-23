@@ -1,5 +1,6 @@
 from collections import OrderedDict
-import unittest
+
+import pytest
 
 from probtextgen.preprocess import covers_another_weekday
 from probtextgen.preprocess import determine_target_weekday
@@ -7,50 +8,53 @@ from probtextgen.preprocess import extract_relevant_text
 from probtextgen.preprocess import is_valid
 
 
-class TestPreprocess(unittest.TestCase):
+@pytest.fixture
+def extracted_text():
+    with open('test_probtextgen/fixtures/extracted_text.txt') as file:
+        return file.read()
+
+
+@pytest.fixture
+def original_text():
+    with open('test_probtextgen/fixtures/original_text.txt') as file:
+        return file.read()
+
+
+class TestPreprocess:
 
     def test_covers_another_weekday(self):
         target_weekday = 'Sonntag'
 
-        self.assertFalse(
+        assert (
             covers_another_weekday(
-                'Der Sonntag beginnt von Westen her sonnig', target_weekday))
+                'Der Sonntag beginnt von Westen her sonnig', target_weekday)
+            is False
+        )
 
-        self.assertTrue(
+        assert (
             covers_another_weekday(
                 'In der Nacht zum Dienstag frischt der Ostwind weiter auf',
-                target_weekday))
+                target_weekday)
+            is True
+        )
 
     def test_determine_target_weekday(self):
-        self.assertEqual(
+        assert (
             determine_target_weekday(
-                'Vorhersage für Bayern, Sonntag, 13.03.2016'), 'Sonntag')
+                'Vorhersage für Bayern, Sonntag, 13.03.2016') == 'Sonntag'
+        )
 
-        self.assertEqual(
+        assert (
             determine_target_weekday(
-                'Vorhersage für Bayern, SO, 13.03.2016'), 'Sonntag')
+                'Vorhersage für Bayern, SO, 13.03.2016') == 'Sonntag'
+        )
 
-    def test_extract_relevant_text(self):
+    def test_extract_relevant_text(self, original_text, extracted_text):
         title = 'Vorhersage für Bayern, Sonntag, 13.03.2016'
-        text = '''Vorhersage für Bayern, Sonntag, 13.03.2016
 
-SO: Nachtfrost, meist bewölkt, bis 7°C, Ostwind.
-
-An der Ostflanke einer Hochdruckbrücke über Miitteleuropa fliesst weiter kühlere Luft heran. Der Hochdruckeinfluss hält voraussichtlich bis Donnerstag an.
-
-In der Nacht zum Sonntag nimmt der Wind aus östlichen Richtungen zu, und wird dabei böiger, die Hochnebelfelder verdichten sich und die Temperaturen sinken bis 0°C  in den Ebenen, und -2°C am Alpenrand.
-Der Sonntag beginnt von Westen her sonnig, die Hochnebelfelder lösen sich auch teils im Osten und die Temperaturen steigen bis 7°C in den Ebenen und Null Grad auf 1200 Metern Höhe bei zeitweise starkem, böigem Wind aus östlichen Richtungen.
-Nachts lässt der Wind etwas nach, und es gibt verbreitet leichten Frost.
-Am Montag frischt der Ostwind wieder auf bei Temperaturen bis  maximal 5°C und auflockernder Bewölkung, teils mit Sonne.
-In der Nacht zum Dienstag frischt der Ostwind weiter auf und die Temperaturen erreichen bis 7°C in Franken, und 3°C in Niederbayern und am Alpenrand.
-Der Mittwoch bringt Sonne, höhere Temperaturen bis 10°C und abnehmender Wind aus Süd.
-'''
-        self.assertEqual(
-            extract_relevant_text(title, text),
-            '''SO: Nachtfrost, meist bewölkt, bis 7°C, Ostwind.
-In der Nacht zum Sonntag nimmt der Wind aus östlichen Richtungen zu, und wird dabei böiger, die Hochnebelfelder verdichten sich und die Temperaturen sinken bis 0°C  in den Ebenen, und -2°C am Alpenrand.
-Der Sonntag beginnt von Westen her sonnig, die Hochnebelfelder lösen sich auch teils im Osten und die Temperaturen steigen bis 7°C in den Ebenen und Null Grad auf 1200 Metern Höhe bei zeitweise starkem, böigem Wind aus östlichen Richtungen.
-Nachts lässt der Wind etwas nach, und es gibt verbreitet leichten Frost.''')
+        assert (
+            extract_relevant_text(title, original_text) == extracted_text
+        )
 
     def test_is_valid(self):
         invalid_rows = [
@@ -64,7 +68,7 @@ Nachts lässt der Wind etwas nach, und es gibt verbreitet leichten Frost.''')
         ]
 
         for row in invalid_rows:
-            self.assertFalse(is_valid(row))
+            assert is_valid(row) is False
 
         valid_rows = [
             OrderedDict([
@@ -77,4 +81,4 @@ Nachts lässt der Wind etwas nach, und es gibt verbreitet leichten Frost.''')
         ]
 
         for row in valid_rows:
-            self.assertTrue(is_valid(row))
+            assert is_valid(row) is True
