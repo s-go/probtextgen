@@ -2,6 +2,7 @@ from collections import OrderedDict
 import unittest
 
 from probtextgen.preprocess import covers_another_weekday
+from probtextgen.preprocess import determine_target_weekday
 from probtextgen.preprocess import extract_relevant_text
 from probtextgen.preprocess import is_valid
 
@@ -19,6 +20,15 @@ class TestPreprocess(unittest.TestCase):
             covers_another_weekday(
                 'In der Nacht zum Dienstag frischt der Ostwind weiter auf',
                 target_weekday))
+
+    def test_determine_target_weekday(self):
+        self.assertEqual(
+            determine_target_weekday(
+                'Vorhersage für Bayern, Sonntag, 13.03.2016'), 'Sonntag')
+
+        self.assertEqual(
+            determine_target_weekday(
+                'Vorhersage für Bayern, SO, 13.03.2016'), 'Sonntag')
 
     def test_extract_relevant_text(self):
         title = 'Vorhersage für Bayern, Sonntag, 13.03.2016'

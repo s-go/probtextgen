@@ -1,3 +1,5 @@
+#!/usr/bin/env python3.6
+
 import csv
 
 FIELDNAMES = (
@@ -37,16 +39,11 @@ def clean_up_texts(input_filepath, output_filepath):
         reader = csv.DictReader(input_file, delimiter=';')
         writer = csv.DictWriter(
             output_file, fieldnames=FIELDNAMES, delimiter=';')
-        for i, row in enumerate(reader):
-            # TODO: Remove
-            print(row)
+        for row in reader:
             if is_valid(row):
                 row['text'] = extract_relevant_text(row['title'], row['text'])
                 writer.writerow(row)
                 written_rows += 1
-            # TODO: Remove
-            if i > 4:
-                break
 
     print('Wrote %s rows to "%s"' % (written_rows, output_filepath))
 
@@ -68,11 +65,17 @@ def covers_another_weekday(line, target_weekday, num_tokens=5):
 
 
 def determine_target_weekday(title):
+    # Check for full weekday names first
     for weekday in WEEKDAYS_LONG:
         if weekday in title:
             return weekday
 
-    raise BaseException('Unable to determine target weekday')
+    for i, weekday_short in enumerate(WEEKDAYS_SHORT):
+        if weekday_short in title:
+            return WEEKDAYS_LONG[i]
+
+    raise BaseException(
+        f'Unable to determine target weekday from title "{title}"')
 
 
 def extract_relevant_text(title, text):
@@ -88,6 +91,8 @@ def extract_relevant_text(title, text):
         # Remove overview line
         if overview_pattern == ['teaser', 'blank', 'line', 'blank']:
             relevant_lines.pop()
+
+        line = line.strip()
 
         if line.startswith(WEEKDAYS_SHORT):
             overview_pattern = ['teaser']
