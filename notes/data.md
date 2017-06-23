@@ -58,7 +58,7 @@ Am Mittwoch sind Sonne, höhere Temperaturen bis 10°C und abnehmender Wind aus 
 
 - [x] Extract texts that are covered by data.
 - [x] Clean up data (see below).
-- [ ] Extract text segments that are covered by data (first day of forecast).
+- [x] Extract text segments that are covered by data (first day of forecast).
 	* Determine day of the week
 	* If another day of the week appears within the first five tokens of a paragraph, remove this and all subsequent paragraphs (5: "Der Sonntag", "Am Sonntag", "In der Nacht zum Sonntag")
 
